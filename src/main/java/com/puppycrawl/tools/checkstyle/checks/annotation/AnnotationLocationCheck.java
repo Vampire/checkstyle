@@ -125,7 +125,7 @@ import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
  * </pre>
  * <br>
  * <p>
- * The following example demonstrates how the check validates annotation of method parameters,
+ * The following example demonstrates how the check validates annotation of
  * catch parameters, foreach, for-loop variable definitions.
  * </p>
  *
@@ -137,14 +137,14 @@ import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
  *    value=&quot;false&quot;/&gt;
  *    &lt;property name=&quot;allowSamelineParameterizedAnnotation&quot; value=&quot;false&quot;
  *    /&gt;
- *    &lt;property name=&quot;tokens&quot; value=&quot;VARIABLE_DEF, PARAMETER_DEF&quot;/&gt;
+ *    &lt;property name=&quot;tokens&quot; value=&quot;VARIABLE_DEF&quot;/&gt;
  * &lt;/module&gt;
  * </pre>
  *
  * <p>Code example
  * {@code
  * ...
- * public void test(&#64;MyAnnotation String s) { // OK
+ * public void test(String s) {
  *   ...
  *   for (&#64;MyAnnotation char c : s.toCharArray()) { ... }  // OK
  *   ...
@@ -176,7 +176,6 @@ public class AnnotationLocationCheck extends AbstractCheck {
 
     /** Array of single line annotation parents. */
     private static final int[] SINGLELINE_ANNOTATION_PARENTS = {TokenTypes.FOR_EACH_CLAUSE,
-                                                                TokenTypes.PARAMETER_DEF,
                                                                 TokenTypes.FOR_INIT, };
 
     /**
@@ -248,7 +247,6 @@ public class AnnotationLocationCheck extends AbstractCheck {
             TokenTypes.METHOD_DEF,
             TokenTypes.CTOR_DEF,
             TokenTypes.VARIABLE_DEF,
-            TokenTypes.PARAMETER_DEF,
             TokenTypes.ANNOTATION_DEF,
             TokenTypes.ANNOTATION_FIELD_DEF,
         };
