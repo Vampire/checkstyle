@@ -19,6 +19,7 @@
 
 package com.puppycrawl.tools.checkstyle;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +28,6 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class DefaultLoggerTest {
         final DefaultLogger dl = new DefaultLogger(infoStream, true, errorStream, true);
         dl.addException(new AuditEvent(5000, "myfile"), new IllegalStateException("upsss"));
         dl.auditFinished(new AuditEvent(6000, "myfile"));
-        final String output = errorStream.toString(StandardCharsets.UTF_8.name());
+        final String output = errorStream.toString(UTF_8.name());
         final LocalizedMessage addExceptionMessage = new LocalizedMessage(1,
                 Definitions.CHECKSTYLE_BUNDLE, DefaultLogger.ADD_EXCEPTION_MESSAGE,
                 new String[] {"myfile"}, null,
@@ -115,9 +115,9 @@ public class DefaultLoggerTest {
     }
 
     @Test
-    public void testAddError() {
-        final OutputStream infoStream = new ByteArrayOutputStream();
-        final OutputStream errorStream = new ByteArrayOutputStream();
+    public void testAddError() throws UnsupportedEncodingException {
+        final ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
         final DefaultLogger dl = new DefaultLogger(infoStream,
                 AutomaticBean.OutputStreamOptions.CLOSE, errorStream,
                 AutomaticBean.OutputStreamOptions.CLOSE);
@@ -127,15 +127,16 @@ public class DefaultLoggerTest {
                 null, null, getClass(), "customMessage")));
         dl.auditFinished(null);
         assertEquals("expected output", auditStartMessage.getMessage() + System.lineSeparator()
-                + auditFinishMessage.getMessage() + System.lineSeparator(), infoStream.toString());
+                + auditFinishMessage.getMessage() + System.lineSeparator(),
+                infoStream.toString(UTF_8.name()));
         assertEquals("expected output", "[ERROR] fileName:1:2: customMessage [DefaultLoggerTest]"
-                + System.lineSeparator(), errorStream.toString());
+                + System.lineSeparator(), errorStream.toString(UTF_8.name()));
     }
 
     @Test
-    public void testAddErrorModuleId() {
-        final OutputStream infoStream = new ByteArrayOutputStream();
-        final OutputStream errorStream = new ByteArrayOutputStream();
+    public void testAddErrorModuleId() throws UnsupportedEncodingException {
+        final ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
         final DefaultLogger dl = new DefaultLogger(infoStream, true, errorStream, true);
         dl.finishLocalSetup();
         dl.auditStarted(null);
@@ -143,9 +144,10 @@ public class DefaultLoggerTest {
                 null, "moduleId", getClass(), "customMessage")));
         dl.auditFinished(null);
         assertEquals("expected output", auditStartMessage.getMessage() + System.lineSeparator()
-                + auditFinishMessage.getMessage() + System.lineSeparator(), infoStream.toString());
+                + auditFinishMessage.getMessage() + System.lineSeparator(),
+                infoStream.toString(UTF_8.name()));
         assertEquals("expected output", "[ERROR] fileName:1:2: customMessage [moduleId]"
-                + System.lineSeparator(), errorStream.toString());
+                + System.lineSeparator(), errorStream.toString(UTF_8.name()));
     }
 
     @Test

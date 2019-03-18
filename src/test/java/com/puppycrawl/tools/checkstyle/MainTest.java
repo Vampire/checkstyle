@@ -20,6 +20,7 @@
 package com.puppycrawl.tools.checkstyle;
 
 import static com.puppycrawl.tools.checkstyle.internal.utils.TestUtil.isUtilsClassHasPrivateConstructor;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -31,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -311,9 +312,9 @@ public class MainTest {
     @Test
     public void testExistingTargetFile() throws Exception {
         exit.checkAssertionAfterwards(() -> {
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
-                    + auditFinishMessage.getMessage() + EOL,
-                    systemOut.getLog());
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
+                    + auditFinishMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c", getPath("InputMainConfig-classname.xml"),
@@ -340,8 +341,9 @@ public class MainTest {
     @Test
     public void testExistingTargetFilePlainOutput() throws Exception {
         exit.checkAssertionAfterwards(() -> {
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
-                    + auditFinishMessage.getMessage() + EOL, systemOut.getLog());
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
+                    + auditFinishMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c", getPath("InputMainConfig-classname.xml"),
@@ -361,14 +363,15 @@ public class MainTest {
                     "name.invalidPattern", new String[] {"InputMainInner", "^[a-z0-9]*$"},
                     null, getClass(), null);
             final String expectedPath = getFilePath("InputMain.java");
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
                             + "[WARN] " + expectedPath + ":3:14: "
                             + invalidPatternMessageMain.getMessage()
                             + " [TypeName]" + EOL
                             + "[WARN] " + expectedPath + ":5:7: "
                             + invalidPatternMessageMainInner.getMessage()
                             + " [TypeName]" + EOL
-                            + auditFinishMessage.getMessage() + EOL, systemOut.getLog());
+                            + auditFinishMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c", getPath("InputMainConfig-classname2.xml"),
@@ -392,13 +395,14 @@ public class MainTest {
                     "name.invalidPattern", new String[] {"InputMainInner", "^[a-z0-9]*$"},
                     null, getClass(), null);
             final String expectedPath = getFilePath("InputMain.java");
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
                     + "[ERROR] " + expectedPath + ":3:14: "
                     + invalidPatternMessageMain.getMessage() + " [TypeName]" + EOL
                     + "[ERROR] " + expectedPath + ":5:7: "
                     + invalidPatternMessageMainInner.getMessage() + " [TypeName]" + EOL
                     + auditFinishMessage.getMessage() + EOL
-                    + errorCounterTwoMessage.getMessage() + EOL, systemOut.getLog());
+                    + errorCounterTwoMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c",
@@ -425,11 +429,12 @@ public class MainTest {
                     "name.invalidPattern", new String[] {"InputMain1", "^[a-z0-9]*$"},
                     null, getClass(), null);
             final String expectedPath = getFilePath("InputMain1.java");
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
                     + "[ERROR] " + expectedPath + ":3:14: "
                     + invalidPatternMessageMain.getMessage() + " [TypeName]" + EOL
                     + auditFinishMessage.getMessage() + EOL
-                    + errorCounterTwoMessage.getMessage() + EOL, systemOut.getLog());
+                    + errorCounterTwoMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c",
@@ -479,8 +484,9 @@ public class MainTest {
     public void testExistingTargetFilePlainOutputProperties() throws Exception {
         //exit.expectSystemExitWithStatus(0);
         exit.checkAssertionAfterwards(() -> {
-            assertEquals("Unexpected output log", auditStartMessage.getMessage() + EOL
-                    + auditFinishMessage.getMessage() + EOL, systemOut.getLog());
+            assertEquals("Unexpected output log", new String((auditStartMessage.getMessage() + EOL
+                    + auditFinishMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
         Main.main("-c", getPath("InputMainConfig-classname-prop.xml"),
@@ -611,7 +617,8 @@ public class MainTest {
             }
             sb.append(auditFinishMessage.getMessage())
                     .append(EOL);
-            assertEquals("Unexpected output log", sb.toString(), systemOut.getLog());
+            assertEquals("Unexpected output log", new String(sb.toString().getBytes(UTF_8),
+                    Charset.defaultCharset()), systemOut.getLog());
             assertEquals("Unexpected system error log", "", systemErr.getLog());
         });
 
@@ -684,8 +691,9 @@ public class MainTest {
     public void testFileReferenceDuringException() throws Exception {
         exit.expectSystemExitWithStatus(-2);
         exit.checkAssertionAfterwards(() -> {
-            final String expectedExceptionMessage = auditStartMessage.getMessage() + EOL
-                            + errorCounterOneMessage.getMessage() + EOL;
+            final String expectedExceptionMessage = new String((auditStartMessage.getMessage() + EOL
+                            + errorCounterOneMessage.getMessage() + EOL).getBytes(UTF_8),
+                    Charset.defaultCharset());
             assertEquals("Unexpected output log", expectedExceptionMessage, systemOut.getLog());
 
             final String exceptionFirstLine = "com.puppycrawl.tools.checkstyle.api."
@@ -793,7 +801,7 @@ public class MainTest {
     @Test
     public void testPrintTreeJavadocOption() throws Exception {
         final String expected = new String(Files.readAllBytes(Paths.get(
-            getPath("InputMainExpectedInputJavadocComment.txt"))), StandardCharsets.UTF_8)
+            getPath("InputMainExpectedInputJavadocComment.txt"))), UTF_8)
             .replaceAll("\\\\r\\\\n", "\\\\n").replaceAll("\r\n", "\n");
 
         exit.checkAssertionAfterwards(() -> {
@@ -1107,7 +1115,7 @@ public class MainTest {
     public void testPrintFullTreeOption() throws Exception {
         final String expected = new String(Files.readAllBytes(Paths.get(
             getPath("InputMainExpectedInputAstTreeStringPrinterJavadoc.txt"))),
-            StandardCharsets.UTF_8).replaceAll("\\\\r\\\\n", "\\\\n")
+            UTF_8).replaceAll("\\\\r\\\\n", "\\\\n")
                 .replaceAll("\r\n", "\n");
 
         exit.checkAssertionAfterwards(() -> {

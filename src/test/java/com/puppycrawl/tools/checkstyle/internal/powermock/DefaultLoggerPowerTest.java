@@ -25,7 +25,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
@@ -41,7 +40,7 @@ public class DefaultLoggerPowerTest {
 
     @Test
     public void testNewCtor() throws Exception {
-        final OutputStream infoStream = spy(new ByteArrayOutputStream());
+        final ByteArrayOutputStream infoStream = spy(new ByteArrayOutputStream());
         final ByteArrayOutputStream errorStream = spy(new ByteArrayOutputStream());
         final DefaultLogger dl = new DefaultLogger(infoStream,
                 AutomaticBean.OutputStreamOptions.CLOSE, errorStream,
@@ -65,7 +64,7 @@ public class DefaultLoggerPowerTest {
 
         verify(infoStream, times(1)).close();
         verify(errorStream, times(1)).close();
-        final String infoOutput = infoStream.toString();
+        final String infoOutput = infoStream.toString(StandardCharsets.UTF_8.name());
         assertTrue("Message should contain exception info, but was " + infoOutput,
                 infoOutput.contains(startMessage.getMessage()));
         assertTrue("Message should contain exception info, but was " + infoOutput,

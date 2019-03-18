@@ -28,6 +28,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -88,8 +90,12 @@ public class CheckstyleAntTaskPowerTest extends AbstractPathTestSupport {
                 new MessageLevelPair("To locate the files took 0 ms.", Project.MSG_VERBOSE),
                 new MessageLevelPair("Running Checkstyle ", Project.MSG_INFO),
                 new MessageLevelPair("Using configuration ", Project.MSG_VERBOSE),
-                new MessageLevelPair(auditStartedMessage.getMessage(), Project.MSG_DEBUG),
-                new MessageLevelPair(auditFinishedMessage.getMessage(), Project.MSG_DEBUG),
+                new MessageLevelPair(new String(
+                        auditStartedMessage.getMessage().getBytes(StandardCharsets.UTF_8),
+                        Charset.defaultCharset()), Project.MSG_DEBUG),
+                new MessageLevelPair(new String(
+                        auditFinishedMessage.getMessage().getBytes(StandardCharsets.UTF_8),
+                        Charset.defaultCharset()), Project.MSG_DEBUG),
                 new MessageLevelPair("To process the files took 0 ms.", Project.MSG_VERBOSE),
                 new MessageLevelPair("Total execution took 0 ms.", Project.MSG_VERBOSE)
         );
